@@ -143,79 +143,80 @@ bg-gradient-to-t from-purple-600/20 via-black/80 to-black retro-80s-style">
     </div>
 
     <script>
-      const mobileMenuButton = document.getElementById('mobile-menu-button');
-const mobileMenu = document.getElementById('mobile-menu');
-const burgerLines = document.querySelectorAll('.burger-line');
-let isMenuOpen = false;
-
-mobileMenuButton.addEventListener('click', function() {
-    isMenuOpen = !isMenuOpen;
-
-    mobileMenuButton.disabled = true;
+            document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const burgerLines = document.querySelectorAll('.burger-line');
     
-    if (isMenuOpen) {
-
-        mobileMenu.classList.remove('hidden');
-        mobileMenu.style.display = 'block';
+   
+    if (!mobileMenuButton || !mobileMenu) return;
+    
+    
+    let isMenuOpen = false;
+    
+    function toggleMenu() {
+        isMenuOpen = !isMenuOpen;
         
-        
-        requestAnimationFrame(() => {
+        if (isMenuOpen) {
+           
+            mobileMenu.style.display = 'block';
+            setTimeout(() => {
+                mobileMenu.style.opacity = '1';
+                mobileMenu.style.transform = 'translateY(0)';
+            }, 10);
+            
+         
             burgerLines[0].style.transform = 'translateY(7px) rotate(45deg)';
-            burgerLines[0].style.backgroundColor = '#a78bfa';
+            burgerLines[0].style.backgroundColor = 'rgb(167, 139, 250)';
             burgerLines[1].style.opacity = '0';
             burgerLines[2].style.transform = 'translateY(-7px) rotate(-45deg)';
-            burgerLines[2].style.backgroundColor = '#60a5fa';
+            burgerLines[2].style.backgroundColor = 'rgb(96, 165, 250)';
             
-            
-            document.documentElement.style.overflow = 'hidden';
-            document.documentElement.style.position = 'fixed';
-            document.documentElement.style.width = '100%';
-        });
-    } else {
         
-        burgerLines[0].style.transform = '';
-        burgerLines[1].style.opacity = '';
-        burgerLines[2].style.transform = '';
-        burgerLines[0].style.backgroundColor = '';
-        burgerLines[2].style.backgroundColor = '';
-        
-        setTimeout(() => {
-            mobileMenu.classList.add('hidden');
-            mobileMenu.style.display = 'none';
+            document.body.style.overflow = 'hidden';
+        } else {
             
-            document.documentElement.style.overflow = '';
-            document.documentElement.style.position = '';
-            document.documentElement.style.width = '';
+            mobileMenu.style.opacity = '0';
+            mobileMenu.style.transform = 'translateY(-20px)';
             
-            window.scrollTo(0, scrollPosition);
-        }, 300);
+            burgerLines[0].style.transform = '';
+            burgerLines[0].style.backgroundColor = '';
+            burgerLines[1].style.opacity = '';
+            burgerLines[2].style.transform = '';
+            burgerLines[2].style.backgroundColor = '';
+            
+            document.body.style.overflow = '';
+            setTimeout(() => {
+                mobileMenu.style.display = 'none';
+            }, 300);
+        }
     }
+
+    mobileMenuButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleMenu();
+    });
+
+    document.addEventListener('click', function(e) {
+        if (isMenuOpen && !mobileMenu.contains(e.target) && e.target !== mobileMenuButton) {
+            toggleMenu();
+        }
+    });
     
-    setTimeout(() => {
-         mobileMenuButton.disabled = false;
-      }, 300);
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768 && isMenuOpen) {
+            toggleMenu();
+        }
     });
 
-   document.querySelectorAll('#mobile-menu a').forEach(link => {
-      link.addEventListener('click', () => {
-          if (isMenuOpen) {
-             mobileMenuButton.click();
-          }
-      });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && isMenuOpen) {
+            toggleMenu();
+        }
     });
-
-  window.addEventListener('resize', function() {
-    if (window.innerWidth >= 768 && isMenuOpen) {
-        mobileMenuButton.click();
-    }
-  });
-
-let scrollPosition = 0;
-  mobileMenuButton.addEventListener('click', function() {
-     if (!isMenuOpen) {
-         scrollPosition = window.pageYOffset;
-     }
- });
+    
+    mobileMenu.style.display = 'none';
+});
     </script>
 
     <main class="w-full flex-1 pt-24 pb-12 px-4 sm:px-6 md:px-8">
